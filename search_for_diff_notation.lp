@@ -8,13 +8,18 @@
 % TEST CASES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simple case : overlap is {a,b}×{e,f}
-% rel((a;b;c;d),(e;f)).
-% rel((a;b),(g;h)).
+rel((a;b;c;d),(e;f)).
+rel((a;b),(g;h)).
 
 % Twoside case : overlap is {a,b,c,d}×{g,h}
-rel((a;b),(e;f;g;h)).
-rel((c;d),(g;h;i;j)).
+% rel((a;b),(e;f;g;h)).
+% rel((c;d),(g;h;i;j)).
 
+% Two independants case : overlaps are {a,b}×{g,h} and {a2,b2}×{e2,f2}
+% rel((a;b;c;d),(e;f)).
+% rel((a;b),(g;h)).
+% rel((a2;b2;c2;d2),(e2;f2)).
+% rel((a2;b2),(g2;h2)).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
