@@ -91,10 +91,10 @@ def method_file_to_function(method_file:str, name:str='method') -> callable:
 
 
 # Create and add in global scope the tests for pytest.
-for context_file in glob.glob('test_cases/*.lp'):
-    filename = os.path.basename(context_file)
-    for method_file in glob.glob('methods/*.lp'):
-        name = os.path.splitext(os.path.basename(method_file))[0]
-        method = method_file_to_function(method_file, name)
+for method_file in glob.glob('methods/*.lp'):
+    name = os.path.splitext(os.path.basename(method_file))[0]
+    method = method_file_to_function(method_file, name)
+    for context_file in glob.glob('test_cases/*.lp'):
+        filename = os.path.basename(context_file)
         func = partial(run_test_routine, method, context_file, should_fail=name == 'false')
         globals()['test_method_' + name + '_on_' + filename] = func
