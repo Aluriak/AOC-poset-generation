@@ -8,8 +8,8 @@
 % TEST CASES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simple case : overlap is {a,b}×{e,f}
-rel((a;b;c;d),(e;f)).
-rel((a;b),(g;h)).
+% rel((a;b;c;d),(e;f)).
+% rel((a;b),(g;h)).
 
 % Twoside case : overlap is {a,b,c,d}×{g,h}
 % This is a particular case: the overlap is partial (not all attributes or objects of concepts are implied).
@@ -77,30 +77,32 @@ impl(Y):- rel(Z,Y) ; not specx(Z) ; linky(Y).
 
 % A node is either in or out (possibly none of them), but not both.
 % Following constraints are redundants.
-% :- specx(X) ; sharx(X).
-% :- specy(Y) ; shary(Y).
+:- specx(X) ; sharx(X).
+:- specy(Y) ; shary(Y).
 
 % Nodes involved in another concept.
-% inv(X):- rel(X,Z) ; not specy(Z).
-% inv(Y):- rel(Z,Y) ; not specx(Z).
+inv(X):- rel(X,Z) ; not specy(Z).
+inv(Y):- rel(Z,Y) ; not specx(Z).
 
 % Objects are either inside, or in relation with the inside only.
-% ok(X):- specx(X).
-% ok(X):- sharx(X) ; not inv(X).
-% ok(X):- not sharx(X) ; not specx(X) ; rel(X,_).
-% :- not ok(X) ; rel(X,_).
+ok(X):- specx(X).
+ok(X):- sharx(X) ; not inv(X).
+ok(X):- not sharx(X) ; not specx(X) ; rel(X,_).
+:- not ok(X) ; rel(X,_).
 
 % Same for attributes.
-% ok(Y):- specy(Y).
-% ok(Y):- shary(Y) ; not inv(Y).
-% ok(Y):- not shary(Y) ; not specy(Y) ; rel(_,Y).
-% :- not ok(Y) ; rel(_,Y).
+ok(Y):- specy(Y).
+ok(Y):- shary(Y) ; not inv(Y).
+ok(Y):- not shary(Y) ; not specy(Y) ; rel(_,Y).
+:- not ok(Y) ; rel(_,Y).
 
 #show.
-#show specx/1.  % specific objects
-#show specy/1.  % specific attributes
-#show sharx/1.  % shared objects
-#show shary/1.  % shared attributes
-#show impl/1.
-#show linkx/1.
-#show linky/1.
+#show specobj(X): specx(X).  % specific objects
+#show specatt(Y): specy(Y).  % specific attributes
+% #show specx/1.  % specific objects
+% #show specy/1.  % specific attributes
+% #show sharx/1.  % shared objects
+% #show shary/1.  % shared attributes
+% #show impl/1.
+% #show linkx/1.
+% #show linky/1.
