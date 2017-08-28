@@ -26,8 +26,8 @@ def solutions_from_file(filename:str) -> iter:
                 match = SOLUTION_REG.fullmatch(line)
                 if match:
                     objs, atts = match.groups()
-                    objs = frozenset(objs.strip().split(' '))
-                    atts = frozenset(atts.strip().split(' '))
+                    objs = frozenset(objs.strip().split(' ') if objs.strip() else ())
+                    atts = frozenset(atts.strip().split(' ') if atts.strip() else ())
                     yield objs, atts
 
 
