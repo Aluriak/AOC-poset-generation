@@ -11,7 +11,8 @@ import glob
 from functools import partial
 
 import pytest
-from pyasp import asp
+import clyngor
+
 
 
 SOLUTION_REG = re.compile('% ([0-9a-z ]*)\s*×\s*([0-9a-z ]*)\s*')
@@ -39,13 +40,13 @@ def solutions_from_method(method, filename:str) -> iter:
     """
     for answer in method(filename):
         obj, att = set(), set()
-        for atom in answer:
-            if atom.predicate == 'specobj':
-                assert len(atom.args()) == 1
-                obj.add(atom.args()[0])
-            elif atom.predicate == 'specatt':
-                assert len(atom.args()) == 1
-                att.add(atom.args()[0])
+        for predicate, args in answer:
+            if predicate == 'specobj':
+                assert len(args) == 1
+                obj.add(args[0])
+            elif predicate == 'specatt':
+                assert len(args) == 1
+                att.add(args[0])
         yield frozenset(obj), frozenset(att)
 
 
@@ -76,18 +77,14 @@ def run_test_routine(method, context_file, should_fail=False):
 
 def solve(files:iter) -> iter:
     """Yield all solutions found by ASP solver when ran on given files"""
-    solver = asp.Gringo4Clasp(clasp_options='-n 0')
-    files = list(files)
-    print('FILES:', files)
-    yield from solver.run(files, collapseAtoms=False)
+    yield from clyngor.solve(files).int_not_parsed
 
-from clingo import solve
 
 def method_file_to_function(method_file:str, name:str='method') -> callable:
     """Return a function using given file to implement the method.
     """
     def implement(context_file):
-        return tuple(solve((method_file, context_file)))
+        yield from solve((method_file, context_file))
     implement.__name__ = name
     return implement
 
