@@ -64,8 +64,11 @@ def run_test_routine(method, context_file, should_fail=False):
 
     """
     print('context_file =', context_file, '\t method =', method.__name__)
+    print('command = clingo -n 0 {} methods/{}.lp'.format(context_file, method.__name__))
     expected = frozenset(solutions_from_file(context_file))
     found = frozenset(solutions_from_method(method, context_file))
+    print('expected =', expected)
+    print('   found =', found)
     print('expected =', tuple(map(pprint_concept, expected)))
     print('   found =', tuple(map(pprint_concept, found)))
     if should_fail:
