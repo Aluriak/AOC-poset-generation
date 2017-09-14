@@ -93,11 +93,21 @@ def method_file_to_function(method_file:str, name:str='method') -> callable:
 
 
 
-# Create and add in global scope the tests for pytest.
-for method_file in glob.glob('methods/*.lp'):
-    name = os.path.splitext(os.path.basename(method_file))[0]
-    method = method_file_to_function(method_file, name)
-    for context_file in glob.glob('test_cases/*.lp'):
-        filename = os.path.basename(context_file)
-        func = partial(run_test_routine, method, context_file, should_fail=name == 'false')
-        globals()['test_method_' + name + '_on_' + filename] = func
+def run_all_tests(methods_glob:str, test_cases_glob:str):
+    """Populate globals with test function testing methods on test cases
+    given by globs.
+    """
+    # Create and add in global scope the tests for pytest.
+    for method_file in glob.glob(methods_glob):
+        name = os.path.splitext(os.path.basename(method_file))[0]
+        # if name in {'naive', 'search_for_diff_notation'}: continue
+        method = method_file_to_function(method_file, name)
+        for context_file in glob.glob(test_cases_glob):
+            filename = os.path.basename(context_file)
+            func = partial(run_test_routine, method, context_file, should_fail=name == 'false')
+            globals()['test_method_' + name + '_on_' + filename] = func
+
+
+if __name__ != "__main__":
+    run_all_tests('methods/*.lp', 'test_cases/*.lp')
+    run_all_tests('non-bipartite-methods/*.lp', 'non-bipartite-test_cases/*.lp')
