@@ -8,7 +8,6 @@ rel(3,c).
 rel(4,d).
 
 % Expected:
-% ×
 % 4 × d
 % 3 × c
 % 2 × b
