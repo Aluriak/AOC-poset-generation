@@ -1,5 +1,5 @@
-% This methods is looking for concepts in reducted form
-
+% This methods is looking for AOC poset.
+% This methods do not works if objects and attributes share common items.
 %
 % Call
 % cd C:\Users\jnicolas\Documents\potsdam\ASP\PowerGraphLucas\diff
