@@ -36,3 +36,4 @@ imp(X):- cmpatt(Y) ; rel(X,Y).
 #show.
 #show specatt(Y): int(Y).
 #show specobj(X): ext(X).
+% #show imp/1.

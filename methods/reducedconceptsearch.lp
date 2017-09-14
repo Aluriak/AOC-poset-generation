@@ -15,7 +15,7 @@ att(Y):- rel(_,Y).
 0 { ext(X): obj(X) }.  % objects
 0 { int(Y): att(Y) }.  % attributes
 
-%implication.
+% Implication.
 impliesobj(X1,X2):- obj(X1); obj(X2); X1!=X2; rel(X2,Y):rel(X1,Y).
 impliesatt(Y1,Y2):- att(Y1); att(Y2); Y1!=Y2; rel(X,Y2):rel(X,Y1).
 implieso(X1,X2):- impliesobj(X1,X2); not impliesobj(X2,X1). 
@@ -25,14 +25,14 @@ impliesa(Y1,Y2):- impliesatt(Y1,Y2); not impliesatt(Y2,Y1).
 imp(X):- obj(X) ; int(Y) ; not rel(X,Y).
 imp(Y):- ext(X) ; att(Y) ; not rel(X,Y).
 
-%Equivalence of elements.
+% Equivalence of elements.
 imp(X):- ext(U) ; not rel(U,Y) ;  rel(X,Y).
 imp(Y):- int(V) ; not rel(X,V) ;  rel(X,Y).
 
 imp(U):- obj(U); ext(X) ; not rel(U,Y) ;  rel(X,Y).
 imp(V):- att(V); int(Y) ; not rel(X,V) ;  rel(X,Y).
 
-%Non implied elements
+% Non implied elements
 imp(X):- impliesa(Y2,Y1); int(Y1) ;  rel(X,Y2).
 imp(Y):- implieso(X2,X1); ext(X1) ;  rel(X2,Y).
 
