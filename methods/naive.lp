@@ -9,9 +9,8 @@
 obj(X):- rel(X,_) ; rel(X,Y): att(Y).
 att(Y):- rel(_,Y) ; rel(X,Y): obj(X).
 
-% Avoid (half) empty concepts.
-:- not obj(X): obj(X).
-:- not att(Y): att(Y).
+% Avoid the empty concept.
+:- not specatt(_) ; not specobj(_).
 
 
 

@@ -11,10 +11,6 @@ rel(X,Y):- edge(Y,X).
 obj(X):- rel(X,_) ; rel(X,Y): att(Y).
 att(Y):- rel(_,Y) ; rel(X,Y): obj(X).
 
-% Avoid (half) empty concepts.
-% :- not obj(_).
-% :- not att(_).
-
 % Avoid the empty concept.
 :- not specatt(_) ; not specobj(_).
 
