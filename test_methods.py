@@ -31,14 +31,14 @@ def solutions_from_file(filename:str) -> iter:
                     yield objs, atts
 
 
-def solutions_from_method(method, filename:str) -> iter:
+def solutions_from_method(method, context:str) -> iter:
     """Solve the given context using the given method, and extract the concepts
     in each answer (obj/1 and att/1 atoms).
 
     Yield the {obj}×{att} as pairs of frozenset.
 
     """
-    for answer in method(filename):
+    for answer in solve((method, context)):
         obj, att = set(), set()
         for predicate, args in answer:
             if predicate == 'specobj':
@@ -55,16 +55,17 @@ def pprint_concept(concept:(frozenset, frozenset)) -> str:
     return '{{{}}}×{{{}}}'.format(','.join(obj), ','.join(att))
 
 
-def run_test_routine(method, context_file, should_fail=False):
+def run_test_routine(name:str, method, context_file, should_fail=False):
     """Total run of the testing routine for given method and context.
 
-    method -- method function to test
+    name -- name of the method
+    method -- filename of the method to test
     context_file -- filename of the context used to test the method
     should_fail -- if true, expect the method to fail.
 
     """
-    print('context_file =', context_file, '\t method =', method.__name__)
-    print('command = clingo -n 0 {} methods/{}.lp'.format(context_file, method.__name__))
+    print('context_file =', context_file, '\t method =', name)
+    print('command = clingo -n 0 {} {}'.format(method, context_file))
     expected = frozenset(solutions_from_file(context_file))
     found = frozenset(solutions_from_method(method, context_file))
     print('expected =', expected)
@@ -83,17 +84,8 @@ def solve(files:iter) -> iter:
     yield from clyngor.solve(files).int_not_parsed
 
 
-def method_file_to_function(method_file:str, name:str='method') -> callable:
-    """Return a function using given file to implement the method.
-    """
-    def implement(context_file):
-        yield from solve((method_file, context_file))
-    implement.__name__ = name
-    return implement
 
-
-
-def run_all_tests(methods_glob:str, test_cases_glob:str):
+def run_all_tests(methods_glob:str, test_cases_glob:str, prefix:str=''):
     """Populate globals with test function testing methods on test cases
     given by globs.
     """
@@ -101,13 +93,12 @@ def run_all_tests(methods_glob:str, test_cases_glob:str):
     for method_file in glob.glob(methods_glob):
         name = os.path.splitext(os.path.basename(method_file))[0]
         # if name in {'naive', 'search_for_diff_notation'}: continue
-        method = method_file_to_function(method_file, name)
         for context_file in glob.glob(test_cases_glob):
             filename = os.path.basename(context_file)
-            func = partial(run_test_routine, method, context_file, should_fail=name == 'false')
-            globals()['test_method_' + name + '_on_' + filename] = func
+            func = partial(run_test_routine, name, method_file, context_file, should_fail=name == 'false')
+            globals()['test_' + prefix + 'method_' + name + '_on_' + filename] = func
 
 
 if __name__ != "__main__":
     run_all_tests('methods/*.lp', 'test_cases/*.lp')
-    run_all_tests('non-bipartite-methods/*.lp', 'non-bipartite-test_cases/*.lp')
+    run_all_tests('non-bipartite-methods/*.lp', 'non-bipartite-test_cases/*.lp', 'nb_')
