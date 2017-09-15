@@ -1,6 +1,7 @@
 % Step 1: search for concepts.
 % Step 2: filter their objects/attributes.
 
+rel(X,Y):- edge(X,Y).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % IMPLEMENTATION
