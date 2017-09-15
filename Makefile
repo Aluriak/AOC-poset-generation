@@ -1,4 +1,14 @@
-CLINGO=clingo
+CLINGO=~/bin/clingo
+
+other:
+	$(CLINGO) -n 0 other_try.lp
+
+by_concept:
+	$(CLINGO) -n 0 ./search_diff_by_concept.lp
+
+search_diff:
+	$(CLINGO) -n 0 search_for_diff_notation.lp
+
 
 t: test
 test:
