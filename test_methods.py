@@ -47,7 +47,14 @@ def solutions_from_method(method, context:str) -> iter:
             elif predicate == 'specatt':
                 assert len(args) == 1
                 att.add(args[0])
-        yield frozenset(obj), frozenset(att)
+            elif predicate == 'aocposet':  # special case: all aocposet are in one answer set
+                assert len(args) == 2
+                ob, at = args
+                ob = () if ob == 'empty' else ob
+                at = () if at == 'empty' else at
+                yield frozenset(ob), frozenset(at)
+        if obj or att:  # avoid yielding full empty concept
+            yield frozenset(obj), frozenset(att)
 
 
 def pprint_concept(concept:(frozenset, frozenset)) -> str:
