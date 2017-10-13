@@ -14,38 +14,44 @@ rel(X,Y):- edge(Y,X).
 obj(X):- rel(X,_).
 att(Y):- rel(_,Y).
 
+%Equivalence between objects or attributes.
+equivo(X1,X2):- obj(X1); obj(X2); X1<X2; rel(X1,Y):rel(X2,Y); rel(X2,Y):rel(X1,Y). 
+equiva(Y1,Y2):- att(Y1); att(Y2); Y1<Y2; rel(X,Y1):rel(X,Y2); rel(X,Y2):rel(X,Y1). 
+
 %Representatives of each equivalence class
 omin(X):- obj(X); not equivo(_,X).
 amin(Y):- att(Y); not equiva(_,Y).
 
 %Strict implication between objects or attributes.
-implieso(X1,X2):- obj(X1); obj(X2); X1!=X2; rel(X2,Y):rel(X1,Y). 
-impliesa(Y1,Y2):- att(Y1); att(Y2); Y1!=Y2; rel(X,Y2):rel(X,Y1). 
+implieso(X1,X2):- omin(X1); omin(X2); X1!=X2; rel(X2,Y):rel(X1,Y). 
+impliesa(Y1,Y2):- amin(Y1); amin(Y2); Y1!=Y2; rel(X,Y2):rel(X,Y1). 
 
-{ ext(X): obj(X) }1.  % min object 
+{ ext(X): omin(X) }1.  % min object 
 ext:-ext(X).
 
-{ int(Y): att(Y), rel(X,Y) }1:- ext(X).  % min attribute
-{ int(Y): att(Y)}1:- not ext.
+{ int(Y): amin(Y), rel(X,Y) }1:- ext(X).  % min attribute
+{ int(Y): amin(Y)}1:- not ext.
 
 spec(att,Y):- int(Y).
+spec(att,Z):- int(Y); equiva(Y,Z).
 spec(obj,X):- ext(X).
+spec(obj,Z):- ext(X); equivo(X,Z).
 
 
 %Impossible elements.
-impo(X):- obj(X); ext(U); X!=U.
-impa(Y):- att(Y); int(V); Y!=V.
+impo(X):- omin(X); ext(U); X!=U.
+impa(Y):- amin(Y); int(V); Y!=V.
 
-impo(X):- int(Y); impliesa(V,Y); rel(X,V); obj(X).
-impa(Y):- ext(X); implieso(U,X); rel(U,Y); att(Y).
+impo(X):- int(Y); impliesa(V,Y); rel(X,V); omin(X).
+impa(Y):- ext(X); implieso(U,X); rel(U,Y); amin(Y).
 
 % Consistency.
 :- ext(X) ; impo(X).
 :- int(Y) ; impa(Y).
 
 % Maximality.
-:- not ext(X) ; not impo(X) ; obj(X).
-:- not int(Y) ; not impa(Y) ; att(Y).
+:- not ext(X) ; not impo(X) ; omin(X).
+:- not int(Y) ; not impa(Y) ; amin(Y).
 
 
 #show.
